@@ -2,7 +2,7 @@
 #PBS -N netcdf-demo
 #PBS -l walltime=0:10:00
 #PBS -l nodes=1
-#PBS -l pmem=2gb
+#PBS -l pmem=4gb
 #PBS -j oe
 
 module load python/3.6.3-anaconda5.0.1
