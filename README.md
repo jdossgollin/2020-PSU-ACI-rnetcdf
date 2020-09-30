@@ -97,8 +97,28 @@ See [`makeenv.pbs`](./makeenv.pbs).
 qsub -A kzk10_a_g_sc_default makeenv.pbs
 ```
 
+To monitor our progress:
+
+```bash
+qstat -u jjd6264 # replace with your ID
+```
+
+We'll see something like
+
+```
+torque01.util.production.int.aci.ics.psu.edu:
+                                                                                  Req'd       Req'd       Elap
+Job ID                  Username    Queue    Jobname          SessID  NDS   TSK   Memory      Time    S   Time
+----------------------- ----------- -------- ---------------- ------ ----- ------ --------- --------- - ---------
+22736813.torque01.util  jjd6264     batch    make-env           5934     1      1       8gb  00:10:00 R  00:00:46
+[jjd6264@aci-lgn-005 2020-PSU-ACI-rnetcdf]$
+```
+
+This actually takes a while (>10 minutes is not crazy) so I've already run this step.
+
 ### PBS File
 
+Once that's done, we can submit another job to run our code
 See [`demo.pbs`](./demo.pbs).
 It's good practice to make sure we have the most recent version:
 
@@ -106,15 +126,10 @@ It's good practice to make sure we have the most recent version:
 git pull
 ```
 
-To submit a job:
+To submit:
 
 ```bash
 qsub -A kzk10_a_g_sc_default demo.pbs
-```
-To monitor it:
-
-```bash
-qstat -u jjd6264 # replace with your ID
 ```
 
 ## Step 4: Get the data back
