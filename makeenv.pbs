@@ -1,11 +1,10 @@
 #!/bin/bash -l
-#PBS -N netcdf-demo
+#PBS -N make-env
 #PBS -l walltime=0:10:00
 #PBS -l nodes=1
-#PBS -l pmem=2gb
+#PBS -l pmem=8gb
 #PBS -j oe
 
 module load python/3.6.3-anaconda5.0.1
-conda activate rnetcdf
 cd /gpfs/group/kzk10/default/private/rnetcdf-demo/2020-PSU-ACI-rnetcdf
-Rscript demo.R
+conda env create --file environment.yml

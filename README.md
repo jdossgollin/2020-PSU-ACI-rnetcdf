@@ -1,15 +1,14 @@
 # R, netcdf, and PSU ACI
 
+This repository is prepared to share a brief example of how to use conda to solve annoying dependency issues when running R on the PSU ACI cluster.
+
+Let's pretend that we have written an R script on our computer that reads a `netcdf` file and uses `stan` to fit a Normal distribution (this is just a demo!).
+This isn't a meaningful thing to do, but it's a good example because both the `netcdf` and `stan` `C++` libraries can be tricky to install, so if we can do this we can easily do more complicated things!
+
 ## Disclaimers
 
-1. I'm new to ACI. There may be better ways to do some of these things.
+1. I'm new to ACI. There may be (i.e., there almost certainly are) better ways to do some of these things. If you have suggestions for improvement, please raise an Issue or submit a Pull Request on GitHub so that these instructions can stay current.
 1. I'm using Mac. Commands may be subtly different on Windows (linux should be similar).
-1. For some things that we might like to do, there are many "right" approaches. This is just one.
-
-## Goal
-
-1. We have written an R script on our computer that reads a netcdf file and uses `stan` to fit a Normal distribution (this is just a demo!).
-1. We would now like to run this same script on PSU ACI
 
 ## Approach
 
@@ -22,7 +21,6 @@
 
 Here's a really simple example.
 We read in a netcdf file and fit one variable to a normal distribution using Stan.
-This isn't a meaningful thing to do, but it's a good example because both the `netcdf` and `stan` C++ libraries can be tricky to install.
 
 * [`demo.R`](./demo.R)
 * [`normal.stan`](./normal.stan)
@@ -54,7 +52,8 @@ Because sometimes different projects have conflicting dependencies, conda lets u
 Whenever possible, it's a good idea to make sure code runs on your own computer before running it on the cluster.
 
 1. The most transparent way to create an environment is to specify it in a file, like [`environment.yml`](environment.yml).
-1. Create the environment: `conda activate rnetcdf`
+1. Create the environment: `conda env create --file environment.yml`
+1. Activate the environment: `conda activate rnetcdf`
 1. Forgot something you wanted to add? `conda env update --file environment.yml`
 1. Run the code: `Rscript demo.R`
 1. Put any output files (like `output.csv`) in your [`.gitignore`](./.gitignore) because they are _too large for `git`.
@@ -90,10 +89,24 @@ git clone https://github.com/jdossgollin/2020-PSU-ACI-rnetcdf.git
 cd 2020-PSU-ACI-rnetcdf/
 ```
 
+Now we have to create the repository here as well.
+This is actually a time-intensive process so we should submit it as a job.
+See [`makeenv.pbs`](./makeenv.pbs).
+
+```bash
+qsub -A kzk10_a_g_sc_default makeenv.pbs
+```
+
 ### PBS File
 
 See [`demo.pbs`](./demo.pbs).
-To submit it:
+It's good practice to make sure we have the most recent version:
+
+```bash
+git pull
+```
+
+To submit a job:
 
 ```bash
 qsub -A kzk10_a_g_sc_default demo.pbs
@@ -107,5 +120,8 @@ qstat -u jjd6264 # replace with your ID
 ## Step 4: Get the data back
 
 ```bash
-scp jjd6264@aci-b.aci.ics.psu.edu:/gpfs/group/kzk10/default/private/susquehanna_hydro/Sanjib_James_Share/ ./data/raw/sanjib
+scp jjd6264@aci-b.aci.ics.psu.edu:/gpfs/group/kzk10/default/private/rnetcdf-demo/2020-PSU-ACI-rnetcdf/output.csv ./
 ```
+
+Now we can analyze the output freely on a laptop!
+(There are, of course, other options like running Jupyter or RStudio on a remote server -- save that for later!)
