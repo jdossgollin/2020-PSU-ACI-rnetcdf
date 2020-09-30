@@ -92,6 +92,18 @@ cd 2020-PSU-ACI-rnetcdf/
 
 ### PBS File
 
+See [`demo.pbs`](./demo.pbs).
+To submit it:
+
+```bash
+qsub -A kzk10_a_g_sc_default demo.pbs
+```
+To monitor it:
+
+```bash
+qstat -u jjd6264 # replace with your ID
+```
+
 ## Step 4: Get the data back
 
 ```bash

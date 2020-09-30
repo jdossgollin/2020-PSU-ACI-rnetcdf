@@ -6,4 +6,5 @@
 #PBS -j oe
 
 module load python/3.6.3-anaconda5.0.1
+cd /gpfs/group/kzk10/default/private/rnetcdf-demo/2020-PSU-ACI-rnetcdf
 Rscript demo.R
