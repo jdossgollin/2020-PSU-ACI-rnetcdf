@@ -114,9 +114,28 @@ Job ID                  Username    Queue    Jobname          SessID  NDS   TSK 
 [jjd6264@aci-lgn-005 2020-PSU-ACI-rnetcdf]$
 ```
 
-This actually takes a while (>10 minutes is not crazy) so I've already run this step.
+This can take a while, so I've run this in advance.
+When we're done we can run `cat make-env.o22737325` (you'll have a different job number).
+We should see something like this:
 
-### PBS File
+```
+<many lines>
+Using Anaconda API: https://api.anaconda.org####### | Time: 0:00:00  74.39 MB/s
+r-rstan-2.21.2 100% |###############################| Time: 0:00:00  67.36 MB/s
+#
+# To activate this environment, use:
+# > source activate rnetcdf
+#
+# To deactivate an active environment, use:
+# > source deactivate
+#
+```
+
+That tells us that our environment was built successfully.
+
+> Note: As outlined in the conda [docs](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html), if you're using conda 4.6 and later you write `conda activate <env>` but older versions use `source activate <env>` (Mac/Linux) or `activate <env>` (Windows).
+
+### Running the script
 
 Once that's done, we can submit another job to run our code
 See [`demo.pbs`](./demo.pbs).
@@ -132,11 +151,63 @@ To submit:
 qsub -A kzk10_a_g_sc_default demo.pbs
 ```
 
+We know this has run because we can look at the output file:
+
+```bash
+cat netcdf-demo.o22737346
+```
+
+Gives us
+
+```
+<many lines>
+          mean se_mean   sd     2.5%      25%      50%      75%    97.5% n_eff
+mu     5672.13    0.08 5.64  5660.99  5668.22  5672.16  5676.01  5682.83  4970
+sigma   109.25    0.06 4.05   101.61   106.47   109.17   112.02   117.42  5017
+lp__  -1926.58    0.02 0.99 -1929.16 -1926.96 -1926.30 -1925.88 -1925.60  2304
+      Rhat
+mu       1
+sigma    1
+lp__     1
+
+Samples were drawn using NUTS(diag_e) at Wed Sep 30 11:04:28 2020.
+For each parameter, n_eff is a crude measure of effective sample size,
+and Rhat is the potential scale reduction factor on split chains (at
+convergence, Rhat=1).
+```
+
 ## Step 4: Get the data back
+
+The script we ran created an output file called `output.csv`.
+Because it's not a good idea to put processed data in `git`, we need another way to get it to our laptop for further analysis.
+To do this can use `scp` (there's a GUI for Windows).
+
+After closing the SSH connection to the server and going to the repository on our home computer:
 
 ```bash
 scp jjd6264@aci-b.aci.ics.psu.edu:/gpfs/group/kzk10/default/private/rnetcdf-demo/2020-PSU-ACI-rnetcdf/output.csv ./
 ```
 
-Now we can analyze the output freely on a laptop!
+We know that this has worked when we can see the file:
+
+```bash
+tail -n 10 output.csv
+```
+
+gives
+
+```
+"4991",5672.87974730835,112.176230136791,-1925.92334433728
+"4992",5669.78800987857,107.224696508284,-1925.74789249329
+"4993",5674.58512364147,110.689986628249,-1925.78087635422
+"4994",5663.0353335047,112.310084529748,-1927.14692538512
+"4995",5663.0353335047,112.310084529748,-1927.14692538512
+"4996",5681.10945646079,102.022946524661,-1928.65298306884
+"4997",5667.19971580409,113.505617688898,-1926.56291592166
+"4998",5667.19971580409,113.505617688898,-1926.56291592166
+"4999",5688.14933390693,110.198370793178,-1929.59244105909
+"5000",5682.75271902458,103.97599987215,-1928.33566529754
+```
+
+Now we can analyze the output leisurely on a laptop!
 (There are, of course, other options like running Jupyter or RStudio on a remote server -- save that for later!)
