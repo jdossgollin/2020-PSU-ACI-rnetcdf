@@ -66,8 +66,31 @@ To do that, we'll use `git` and `GitHub`.
 Learn more about `git` on the Software Carpentry [Lesson](https://swcarpentry.github.io/git-novice/).
 The key thing we want to keep in mind is that `git` is a good way to store `code` but a bad way to store `data`, especially binary formats like `.nc`.
 
+### Connect
 
+First we have to connect and navigate to our project directory
 
+```bash
+ssh -l jjd6264 aci-b.aci.ics.psu.edu
+```
+
+(if you use iTerm you can set up a password manager -- highly recommended!)
+Next navigate to our directory
+
+```bash
+cd /gpfs/group/kzk10/default/private/rnetcdf-demo
+```
+
+Now clone the repository from git.
+This repository is available on [my GitHub](https://github.com/jdossgollin/2020-PSU-ACI-rnetcdf).
+
+```bash
+module load git
+git clone https://github.com/jdossgollin/2020-PSU-ACI-rnetcdf.git
+cd 2020-PSU-ACI-rnetcdf/
+```
+
+### PBS File
 
 ## Step 4: Get the data back
 
