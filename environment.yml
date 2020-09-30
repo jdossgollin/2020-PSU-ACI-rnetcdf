@@ -1,0 +1,12 @@
+name: rnetcdf # the name of the environment
+channels: # I recommend keeping this order
+  - conda-forge
+  - r
+  - defaults
+dependencies:
+  - r-base # base r
+  - r-rnetcdf # to update: search https://anaconda.org/conda-forge/r-rnetcdf
+  - r-rstan # bayesian stats
+  - r-bh # required for stan but not a registered dependency (bug)
+  - rstudio # use RStudio
+  #- r-essentials # You will probably want this
